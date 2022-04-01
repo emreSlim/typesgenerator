@@ -1,3 +1,5 @@
+import { isPlainKey, logWarning, toTitleCase } from '../utils';
+
 function getInterface(
   data:any,
   declarationName:string,
@@ -7,7 +9,7 @@ function getInterface(
   if (declarationName == null) {
     declarationName = 'Type';
   } else if (declarationName.length) {
-    declarationName = getTitleCase(declarationName);
+    declarationName = toTitleCase(declarationName);
   }
 
   let codeString = '';
@@ -65,8 +67,8 @@ function getInterface(
           let modelString = '{\n';
           for (let key in data) {
             const value = data[key];
-            const subInterfaceName = declarationName + getTitleCase(key);
-
+            const subInterfaceName = declarationName + toTitleCase(key);
+            if(!isPlainKey(key)) key = `"${key}"`
             if (
               !(value instanceof Array) &&
               value != null &&
@@ -107,15 +109,13 @@ function getInterface(
   let subInterfaceString = '';
   if (isFirstStack) {
     subInterfaces.forEach((v, k) => {
+      if(!isPlainKey(k)) k = `"${k}"`
       subInterfaceString += `export type ${k} = ${v}`;
     });
+    declarationName === 'Type' &&  logWarning('Type Name was not given. Type generated with dummy name: "Type"')
   }
 
   return subInterfaceString + codeString;
-}
-
-function getTitleCase(string:string) {
-  return string[0].toUpperCase() + string.slice(1);
 }
 
 
