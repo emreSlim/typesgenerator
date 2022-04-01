@@ -1,11 +1,18 @@
 import { isKeyPlain, logWarning, toTitleCase } from '../utils';
 
-function getInterface(
-  data:any,
-  declarationName:string,
+export type InterfaceGenerator = (
+  data: any,
+  declarationName: string,
+  subInterfaces?: Map<string, string>,
+  isFirstStack?: boolean
+) => string;
+
+export const getInterface: InterfaceGenerator = (
+  data,
+  declarationName,
   subInterfaces = new Map(),
   isFirstStack = true
-) {
+) => {
   if (declarationName == null) {
     declarationName = 'Type';
   } else if (declarationName.length) {
@@ -29,7 +36,7 @@ function getInterface(
       break;
     case 'function':
       {
-        const args:string[] = data.toString().split(/\(|\)/)[1].split(',');
+        const args: string[] = data.toString().split(/\(|\)/)[1].split(',');
         codeString =
           declaration +
           `(${args
@@ -68,7 +75,7 @@ function getInterface(
           for (let key in data) {
             const value = data[key];
             const subInterfaceName = declarationName + toTitleCase(key);
-            if(!isKeyPlain(key)) key = `"${key}"`
+            if (!isKeyPlain(key)) key = `"${key}"`;
             if (
               !(value instanceof Array) &&
               value != null &&
@@ -109,14 +116,14 @@ function getInterface(
   let subInterfaceString = '';
   if (isFirstStack) {
     subInterfaces.forEach((v, k) => {
-      if(!isKeyPlain(k)) k = `"${k}"`
+      if (!isKeyPlain(k)) k = `"${k}"`;
       subInterfaceString += `export type ${k} = ${v}`;
     });
-    declarationName === 'Type' &&  logWarning('Type Name was not given. Type generated with dummy name: "Type"')
+    declarationName === 'Type' &&
+      logWarning(
+        'Type Name was not given. Type generated with dummy name: "Type"'
+      );
   }
 
   return subInterfaceString + codeString;
-}
-
-
-export {getInterface}
+};

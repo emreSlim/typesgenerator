@@ -1,1 +1,1 @@
-export * as default from './getInterface'
+export  { getInterface } from './getInterface';

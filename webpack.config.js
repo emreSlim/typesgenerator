@@ -17,10 +17,9 @@ module.exports = {
   output:{
     path:__dirname,
     filename:"[name]/index.js",
-    library:"typegenerator",
-    libraryTarget:"commonjs2",
+    libraryTarget: 'umd',
+    library: 'typegenerator',
   },
-
   target:'node',
   resolve:{
     extensions:['.ts','.js']

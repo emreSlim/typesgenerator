@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 import * as fs from 'fs';
-import {  createInterfaceFile, isArgumentAKey, logError } from '../utils';
+import {   isArgumentAKey, logError } from '../utils';
 import * as path from 'path';
+import { getInterface } from '../lib/getInterface';
 
 const args: string[] = process.argv.slice(2);
 
@@ -58,4 +59,20 @@ try {
   }
 } catch (e) {
   logError(e.message);
+}
+
+
+
+
+export function createInterfaceFile(data:any,typeName:string,targetPath:string){
+  const string = getInterface(data, typeName);
+  const outFileName =
+    typeName?.toLowerCase()
+  const outputPath: string = path.resolve(
+    targetPath,
+    outFileName + '.ts'
+  );
+  fs.writeFile(outputPath, string, { encoding: 'utf-8' }, () => {
+    console.log('Type file generated successfully:', outputPath);
+  });
 }

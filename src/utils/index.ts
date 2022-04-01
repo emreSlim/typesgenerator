@@ -1,7 +1,3 @@
-import * as path from 'path'
-import * as fs from 'fs'
-import { getInterface } from '../lib/getInterface'
-
 
 //  suffix \x1b[0m for reset,  \x1b[4 for bg and \x1b[3 for fg color
 export function logWarning(...args:any){
@@ -25,17 +21,4 @@ export function toTitleCase(string:string) {
 }
 
 
-
-export function createInterfaceFile(data:any,typeName:string,targetPath:string){
-  const string = getInterface(data, typeName);
-  const outFileName =
-    typeName?.toLowerCase()
-  const outputPath: string = path.resolve(
-    targetPath,
-    outFileName + '.ts'
-  );
-  fs.writeFile(outputPath, string, { encoding: 'utf-8' }, () => {
-    console.log('Type file generated successfully:', outputPath);
-  });
-}
 
