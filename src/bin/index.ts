@@ -44,7 +44,9 @@ try {
           if (err) {
             throw err;
           } else {
-            createInterfaceFile(JSON.parse(data),typeName,sourcePath,targetPath)
+            if (!targetPath) targetPath = path.dirname(sourcePath);
+            const inputFileName = path.basename(sourcePath, '.json');
+            createInterfaceFile(JSON.parse(data),typeName??inputFileName,targetPath)
           }
         }
       );

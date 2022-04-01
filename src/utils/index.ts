@@ -26,12 +26,10 @@ export function toTitleCase(string:string) {
 
 
 
-export function createInterfaceFile(data:any,typeName:string,sourcePath:string,targetPath:string){
-  const string = getInterface(JSON.parse(data), typeName);
-  if (!targetPath) targetPath = path.dirname(sourcePath);
-  const inputFileName = path.basename(sourcePath, '.json');
+export function createInterfaceFile(data:any,typeName:string,targetPath:string){
+  const string = getInterface(data, typeName);
   const outFileName =
-    typeName?.toLowerCase() ?? inputFileName.toLowerCase();
+    typeName?.toLowerCase()
   const outputPath: string = path.resolve(
     targetPath,
     outFileName + '.ts'
