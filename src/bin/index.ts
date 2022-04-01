@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
-const fs = require('fs')
-const getInterface = require('../lib/getInterface')
+import * as fs from 'fs'
+const getIF = require('../lib/getInterface')
 
-const args = process.argv.slice(2)
 
-let sourcePath,targetPath,typeName;
+const args:string[] = process.argv.slice(2)
+
+let sourcePath,targetPath,typeName :string;
 
 for(let i=0;i<args.length;i++){
   let arg = args[i]
@@ -28,20 +29,20 @@ for(let i=0;i<args.length;i++){
   }else{continue}
 }
 
-function isArgumentKey(str){
+function isArgumentKey(str:string){
   return str.startsWith('-')
 }
 
 try{
 if(sourcePath){
- 
+
   if(fs.existsSync(sourcePath)){
-   fs.readFile(sourcePath,'utf-8',(err,data)=>{
+   fs.readFile(sourcePath,'utf-8',(err:NodeJS.ErrnoException,data:string)=>{
       if(err){
         throw err;
       }else{
         !typeName && logWarning('Type Name is not given. Type generated with dummy name.')
-        const string = getInterface(JSON.parse(data),typeName)
+        const string = getIF(JSON.parse(data),typeName)
       }
    })
     
@@ -58,10 +59,10 @@ if(sourcePath){
 
 //  suffix \x1b[0m for reset,  \x1b[4 for bg and \x1b[3 for fg color
 
-function logWarning(...args){
+function logWarning(...args:any){
     console.log('\x1b[33m','Warning:',...args,'\x1b[0m')
 }
 
-function logError(...args){
+function logError(...args:any){
   console.log('\x1b[41m','\x1b[37m','Error:',...args,'\x1b[0m')
 }

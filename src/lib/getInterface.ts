@@ -1,6 +1,6 @@
 function getInterface(
-  data,
-  declarationName,
+  data:any,
+  declarationName:string,
   subInterfaces = new Map(),
   isFirstStack = true
 ) {
@@ -27,7 +27,7 @@ function getInterface(
       break;
     case 'function':
       {
-        const args = data.toString().split(/\(|\)/)[1].split(',');
+        const args:string[] = data.toString().split(/\(|\)/)[1].split(',');
         codeString =
           declaration +
           `(${args
@@ -114,7 +114,7 @@ function getInterface(
   return subInterfaceString + codeString;
 }
 
-function getTitleCase(string) {
+function getTitleCase(string:string) {
   return string[0].toUpperCase() + string.slice(1);
 }
 
