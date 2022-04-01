@@ -1,1 +1,1 @@
-module.exports = require('./getInterface')
+export * as default from './getInterface'

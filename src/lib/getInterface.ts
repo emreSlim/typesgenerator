@@ -119,4 +119,4 @@ function getTitleCase(string:string) {
 }
 
 
-module.exports = getInterface
+export {getInterface}

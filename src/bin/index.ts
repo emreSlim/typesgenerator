@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import * as fs from 'fs'
-const getIF = require('../lib/getInterface')
+import {getInterface} from '../lib/getInterface'
 
 
 const args:string[] = process.argv.slice(2)
@@ -42,7 +42,8 @@ if(sourcePath){
         throw err;
       }else{
         !typeName && logWarning('Type Name is not given. Type generated with dummy name.')
-        const string = getIF(JSON.parse(data),typeName)
+        const string = getInterface(JSON.parse(data),typeName)
+        console.log(string)
       }
    })
     

@@ -10,6 +10,7 @@
   "bin": {
     "typegenerator": "bin/index.js"
   },
+  "type": "commonjs",
   "keywords": [
     "create",
     "interfaces",

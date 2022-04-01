@@ -9,7 +9,6 @@ module.exports = {
   module:{
     rules: [
       {
-        test: /\.ts$/,
         use: 'ts-loader',
         exclude: /node_modules/,
       },
@@ -17,8 +16,11 @@ module.exports = {
   },
   output:{
     path:__dirname,
-    filename:"[name]/index.js"
+    filename:"[name]/index.js",
+    library:"typegenerator",
+    libraryTarget:"commonjs2",
   },
+
   target:'node',
   resolve:{
     extensions:['.ts','.js']
