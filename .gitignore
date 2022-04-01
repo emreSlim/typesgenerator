@@ -5,5 +5,7 @@
 
 /build
 /dist
+/bin
 
 /package-lock.json
+

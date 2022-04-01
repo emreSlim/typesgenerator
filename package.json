@@ -8,7 +8,7 @@
     "build": "/node_modules/.bin/babel src --out-dir build"
   },
   "bin": {
-    "typegenerator": "dist/bin/index.js"
+    "typegenerator": "bin/index.js"
   },
   "keywords": [
     "create",
