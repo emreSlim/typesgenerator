@@ -1,4 +1,4 @@
-import { isPlainKey, logWarning, toTitleCase } from '../utils';
+import { isKeyPlain, logWarning, toTitleCase } from '../utils';
 
 function getInterface(
   data:any,
@@ -68,7 +68,7 @@ function getInterface(
           for (let key in data) {
             const value = data[key];
             const subInterfaceName = declarationName + toTitleCase(key);
-            if(!isPlainKey(key)) key = `"${key}"`
+            if(!isKeyPlain(key)) key = `"${key}"`
             if (
               !(value instanceof Array) &&
               value != null &&
@@ -109,7 +109,7 @@ function getInterface(
   let subInterfaceString = '';
   if (isFirstStack) {
     subInterfaces.forEach((v, k) => {
-      if(!isPlainKey(k)) k = `"${k}"`
+      if(!isKeyPlain(k)) k = `"${k}"`
       subInterfaceString += `export type ${k} = ${v}`;
     });
     declarationName === 'Type' &&  logWarning('Type Name was not given. Type generated with dummy name: "Type"')

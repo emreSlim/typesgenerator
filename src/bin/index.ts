@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 import * as fs from 'fs';
-import { getInterface } from '../lib/getInterface';
-import {  createInterfaceFile, logError } from '../utils';
+import {  createInterfaceFile, isArgumentAKey, logError } from '../utils';
 import * as path from 'path';
 
 const args: string[] = process.argv.slice(2);
@@ -13,7 +12,7 @@ for (let i = 0; i < args.length; i++) {
   let arg = args[i];
   const nextArg = args[i + 1];
 
-  if (isArgumentKey(arg) && !isArgumentKey(nextArg)) {
+  if (isArgumentAKey(arg) && !isArgumentAKey(nextArg)) {
     arg = arg.toLowerCase();
     switch (arg) {
       case '-s':
