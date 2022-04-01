@@ -5,7 +5,8 @@
   "main": "dist/lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "/node_modules/.bin/babel src --out-dir build"
+    "build:test": "npx webpack && npm i -g ./"
+
   },
   "bin": {
     "typegenerator": "bin/index.js"
