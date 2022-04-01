@@ -1,0 +1,30 @@
+{
+  "name": "typegenerator",
+  "version": "0.0.1",
+  "description": "This package helps to create typescript types/interfaces from object or json",
+  "main": "dist/lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "/node_modules/.bin/babel src --out-dir build"
+  },
+  "bin": {
+    "typegenerator": "dist/bin/index.js"
+  },
+  "keywords": [
+    "create",
+    "interfaces",
+    "create",
+    "types",
+    "generate",
+    "typscript",
+    "types",
+    "or",
+    "interfaces"
+  ],
+  "author": "Imran",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2"
+  }
+}
