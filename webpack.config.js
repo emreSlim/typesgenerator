@@ -3,7 +3,7 @@ const path = require('path')
 module.exports = {
   mode:'production',
   entry:{
-    dist:'/src/lib/index.ts',
+    lib:'/src/lib/index.ts',
     bin:'/src/bin/index.ts'
   },
   module:{
@@ -15,10 +15,10 @@ module.exports = {
     ]
   },
   output:{
-    path:__dirname,
+    path:path.resolve(__dirname,'dist'),
     filename:"[name]/index.js",
     libraryTarget: 'umd',
-    library: 'typegenerator',
+    library: 'typesgenerator',
   },
   target:'node',
   resolve:{
