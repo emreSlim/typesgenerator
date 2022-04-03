@@ -4,14 +4,16 @@ export type InterfaceGenerator = (
   data: any,
   declarationName: string,
   subInterfaces?: Map<string, string>,
-  isFirstStack?: boolean
+  isFirstStack?: boolean,
+  indentation?:string
 ) => string;
 
 export const getInterface: InterfaceGenerator = (
   data,
   declarationName,
   subInterfaces = new Map(),
-  isFirstStack = true
+  isFirstStack = true,
+  indentation = ''
 ) => {
   if (declarationName == null) {
     declarationName = 'Type';
@@ -58,7 +60,8 @@ export const getInterface: InterfaceGenerator = (
           data,
           declarationName,
           subInterfaces,
-          declaration
+          declaration,
+          indentation
         );
       } else {
         codeString =
@@ -89,7 +92,8 @@ const handleObject = (
   data: Array<any>,
   declarationName: string,
   subInterfaces: Map<string, string>,
-  declaration: string
+  declaration: string,
+  indentation:string
 ) => {
   let codeString = '';
   if (Object.keys(data).length > 0) {
@@ -105,11 +109,12 @@ const handleObject = (
         const value = data[key];
         const subInterfaceName = declarationName + toTitleCase(key);
         if (!isKeyPlain(key)) key = `"${key}"`;
-        modelString += `  ${key}: ${getInterface(
+        modelString += `${indentation}  ${key}: ${getInterface(
           value,
           subInterfaceName,
           subInterfaces,
-          false
+          false,
+          indentation+'  '
         )}`;
 
         if (!modelString.trim().endsWith(';')) modelString += ';\n';
@@ -137,7 +142,7 @@ const handleObject = (
           )}`;
 
           subInterfaces.set(subInterfaceName, subInterface);
-          modelString += `  ${key}: ${subInterfaceName};\n`;
+          modelString += `${indentation}  ${key}: ${subInterfaceName};\n`;
         }
       } else {
         const item: any = {};
@@ -156,16 +161,16 @@ const handleObject = (
         const parentKeyName = declarationName.slice(
           declarationName.lastIndexOf(a[a.length - 1])
         ).toLowerCase();
-        modelString += `  [${parentKeyName}Key: string]: {\n`;
+        modelString += `${indentation}  [${parentKeyName}Key: string]: {\n`;
 
         for (let key in item) {
-          modelString += `    ${key}: ${Array.from(item[key]).join(' | ')};\n`;
+          modelString += `${indentation + '    '}${key}: ${Array.from(item[key]).join(' | ')};\n`;
         }
-        modelString += '  };\n';
+        modelString += `${indentation}  };\n`;
       }
     }
 
-    codeString = declaration + modelString + '};\n';
+    codeString = declaration + modelString + indentation + '};\n';
   } else {
     codeString = `Object;\n\n`;
   }
