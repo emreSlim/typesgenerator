@@ -45,7 +45,7 @@ export const getInterface: InterfaceGenerator = (
       }
       break;
     case 'object':
-      if (data == null) codeString = declaration + 'unknown';
+      if (data == null) codeString = declaration + 'null';
       else if (data instanceof Array) {
         const item = data[0];
         if (
@@ -54,20 +54,45 @@ export const getInterface: InterfaceGenerator = (
           item instanceof Object
         ) {
           const subInterfaceName = declarationName + 'Item';
-          const subInterface = getInterface(
-            item,
-            subInterfaceName,
-            subInterfaces,
-            false
+          const item: any = {};
+          data.forEach((elem) =>
+            Object.keys(elem).forEach((key) => {
+              if (item[key] == null) {
+                item[key] = new Set<any>();
+              }
+              item[key].add(
+                getInterface(elem[key], subInterfaceName, subInterfaces, false)
+              ); //fill the datum object with all the possible keys
+            })
           );
+
+          let subInterface = '{\n';
+
+          for (let key in item) {
+            subInterface += `${key}: ${Array.from(item[key]).join(' | ')};\n`;
+          }
+          subInterface += '};\n\n';
           subInterfaces.set(subInterfaceName, subInterface);
 
           codeString += `${subInterfaceName}[]`;
         } else {
-          codeString =
-            declaration +
-            getInterface(item, declarationName, subInterfaces, false) +
-            '[]';
+          const itemTypes = new Set<string>();
+          data.forEach((elem) => {
+            const itemType = getInterface(
+              elem,
+              declarationName,
+              subInterfaces,
+              false
+            );
+            itemType != 'unknown' && itemTypes.add(itemType);
+          });
+
+          let itemTypesString = Array.from(itemTypes).join(' | ');
+
+          if (itemTypes.size > 1) {
+            itemTypesString = '('+(itemTypesString)+(')');
+          }
+          codeString = declaration+(itemTypesString)+('[]');
         }
       } else if (data.constructor.name === 'Object') {
         if (Object.keys(data).length > 0) {
@@ -128,5 +153,5 @@ export const getInterface: InterfaceGenerator = (
   return subInterfaceString + codeString;
 };
 
-export const printType = (data:object,declarationName: string) => console.log(getInterface(data,declarationName))
-
+export const printType = (data: object, declarationName: string) =>
+  console.log(getInterface(data, declarationName));
