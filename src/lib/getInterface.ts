@@ -127,3 +127,6 @@ export const getInterface: InterfaceGenerator = (
 
   return subInterfaceString + codeString;
 };
+
+export const printType = (data:object,declarationName: string) => console.log(getInterface(data,declarationName))
+

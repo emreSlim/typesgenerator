@@ -1,1 +1,1 @@
-export  { getInterface } from './getInterface';
+export  { printType } from './getInterface';
