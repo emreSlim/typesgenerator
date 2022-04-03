@@ -3,14 +3,13 @@
     "outDir": "dist",
     "noImplicitAny": true,
     "module": "commonjs",
-    "target": "es5",
+    "target": "es6",
     "lib": ["es2015", "dom"],
     "allowJs": false,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "declaration": true,
-    "strict": true,
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist", "bin"]
+  "exclude": ["node_modules", "dist"]
 }
