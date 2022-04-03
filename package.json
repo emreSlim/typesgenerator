@@ -1,6 +1,6 @@
 {
   "name": "typesgenerator",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "This package helps to create typescript types/interfaces from object or json",
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
