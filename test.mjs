@@ -1,8 +1,15 @@
 import {printType} from './dist/lib/index.js'
 
 const o = {
-  name:'test',
-  arr:[{name:[{value:"imran"}]},{name:null,age:25}]
+a:[ {
+   name:'',
+   age:1,
+ },
+{
+  name:'',
+  age:[1,""],
+}]
+
 }
 
 printType(o)
