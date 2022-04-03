@@ -110,7 +110,9 @@ const handleObject = (
           subInterfaceName,
           subInterfaces,
           false
-        )};\n`;
+        )}`;
+
+        if (!modelString.trim().endsWith(';')) modelString += ';\n';
       }
     } else {
       const values = Object.values(data);
@@ -118,6 +120,7 @@ const handleObject = (
       const valueModelKeys = new Set(Object.keys(values[0]));
 
       if (
+        values.length < 2 ||
         values.find((value) =>
           Object.keys(value).find((valueKey) => !valueModelKeys.has(valueKey))
         )
@@ -148,16 +151,21 @@ const handleObject = (
           }
         }
 
-        modelString += '  [key: string]: {\n';
+        const a = declarationName.match(/[A-Z]/g);
+
+        const parentKeyName = declarationName.slice(
+          declarationName.lastIndexOf(a[a.length - 1])
+        ).toLowerCase();
+        modelString += `  [${parentKeyName}Key: string]: {\n`;
 
         for (let key in item) {
-          modelString += `  ${key}: ${Array.from(item[key]).join(' | ')};\n`;
+          modelString += `    ${key}: ${Array.from(item[key]).join(' | ')};\n`;
         }
         modelString += '  };\n';
       }
     }
 
-    codeString = declaration + modelString + '};\n\n';
+    codeString = declaration + modelString + '};\n';
   } else {
     codeString = `Object;\n\n`;
   }
@@ -220,5 +228,3 @@ const handleArray = (
 
 export const printType = (data: object, declarationName: string) =>
   console.log(getInterface(data, declarationName));
-
-
