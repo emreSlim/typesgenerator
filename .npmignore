@@ -3,3 +3,5 @@
 /package-lock.json
 /webpack.config.js
 /tsconfig.json
+/.gitignore
+/test.mjs
