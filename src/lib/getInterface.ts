@@ -89,39 +89,39 @@ export const getInterface: InterfaceGenerator = (
 };
 
 const handleObject = (
-  data: Array<any>,
+  object: any,
   declarationName: string,
   subInterfaces: Map<string, string>,
   declaration: string,
   indentation:string
 ) => {
   let codeString = '';
-  if (Object.keys(data).length > 0) {
+  if (Object.keys(object).length > 0) {
     let modelString = '{\n';
 
     if (
-      Object.values(data).find(
+      Object.values(object).find(
         (value) =>
           value instanceof Array || value == null || !(value instanceof Object)
       )
     ) {
-      for (let key in data) {
-        const value = data[key];
+      for (let key in object) {
+        const value = object[key];
         const subInterfaceName = declarationName + toTitleCase(key);
         if (!isKeyPlain(key)) key = `"${key}"`;
-        const i_f = getInterface(
+        const valueType = getInterface(
           value,
           subInterfaceName,
           subInterfaces,
           false,
           indentation+'  '
         )
-        modelString += `${indentation}  ${key}: ${withNullCheck(i_f)}`;
+        modelString += `${indentation}  ${key}: ${withNullCheck(valueType)}`;
 
         if (!modelString.trim().endsWith(';')) modelString += ';\n';
       }
     } else {
-      const values = Object.values(data);
+      const values = Object.values(object) as any[];
 
       const valueModelKeys = new Set(Object.keys(values[0]));
 
@@ -131,8 +131,8 @@ const handleObject = (
           Object.keys(value).find((valueKey) => !valueModelKeys.has(valueKey))
         )
       ) {
-        for (let key in data) {
-          const value = data[key];
+        for (let key in object) {
+          const value = object[key];
           const subInterfaceName = declarationName + toTitleCase(key);
 
           const subInterface = `${getInterface(
@@ -150,7 +150,7 @@ const handleObject = (
         const item: any = {};
 
         for (let value of values) {
-          for (let key in value) {
+          for (let key  in value ) {
             if (item[key] == null) item[key] = new Set<string>();
             item[key].add(
               getInterface(value[key], declarationName, subInterfaces, false)
@@ -181,17 +181,17 @@ const handleObject = (
 };
 
 const handleArray = (
-  data: Array<any>,
+  array: Array<any>,
   declarationName: string,
   subInterfaces: Map<string, string>,
   declaration: string
 ) => {
   let codeString = '';
-  const item = data[0];
+  const item = array[0];
   if (!(item instanceof Array) && item != null && item instanceof Object) {
     const subInterfaceName = declarationName + 'Item';
     const item: any = {};
-    data.forEach((elem) =>
+    array.forEach((elem) =>
       Object.keys(elem).forEach((key) => {
         if (item[key] == null) {
           item[key] = new Set<any>();
@@ -214,7 +214,7 @@ const handleArray = (
     codeString += `${subInterfaceName}[]`;
   } else {
     const itemTypes = new Set<string>();
-    data.forEach((elem) => {
+    array.forEach((elem) => {
       const itemType = getInterface(
         elem,
         declarationName,
@@ -235,8 +235,8 @@ const handleArray = (
   return codeString;
 };
 
-export const printType = (data: object, declarationName: string) =>
-  console.log(getInterface(data, declarationName));
+export const printType = (object: object, declarationName: string) =>
+  console.log(getInterface(object, declarationName));
 
 
 const withNullCheck = (typ:string) => typ==='null'||typ==='undefined' ?'unknown':typ
