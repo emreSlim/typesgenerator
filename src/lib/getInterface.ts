@@ -34,7 +34,7 @@ export const getInterface: InterfaceGenerator = (
       codeString = declaration + 'string';
       break;
     case 'undefined':
-      codeString = declaration + 'unknown';
+      codeString = declaration + 'undefined';
       break;
     case 'function':
       {
@@ -109,13 +109,14 @@ const handleObject = (
         const value = data[key];
         const subInterfaceName = declarationName + toTitleCase(key);
         if (!isKeyPlain(key)) key = `"${key}"`;
-        modelString += `${indentation}  ${key}: ${getInterface(
+        const i_f = getInterface(
           value,
           subInterfaceName,
           subInterfaces,
           false,
           indentation+'  '
-        )}`;
+        )
+        modelString += `${indentation}  ${key}: ${withNullCheck(i_f)}`;
 
         if (!modelString.trim().endsWith(';')) modelString += ';\n';
       }
@@ -138,7 +139,8 @@ const handleObject = (
             value,
             subInterfaceName,
             subInterfaces,
-            false
+            false,
+            '  '
           )}`;
 
           subInterfaces.set(subInterfaceName, subInterface);
@@ -164,7 +166,8 @@ const handleObject = (
         modelString += `${indentation}  [${parentKeyName}Key: string]: {\n`;
 
         for (let key in item) {
-          modelString += `${indentation + '    '}${key}: ${Array.from(item[key]).join(' | ')};\n`;
+          const valueType = Array.from(item[key]).join(' | ')
+          modelString += `${indentation + '    '}${key}: ${withNullCheck(valueType)};\n`;
         }
         modelString += `${indentation}  };\n`;
       }
@@ -202,7 +205,8 @@ const handleArray = (
     let subInterface = '{\n';
 
     for (let key in item) {
-      subInterface += `${key}: ${Array.from(item[key]).join(' | ')};\n`;
+      const valueType = Array.from(item[key]).join(' | ')
+      subInterface += `  ${key}: ${withNullCheck(valueType)};\n`;
     }
     subInterface += '};\n\n';
     subInterfaces.set(subInterfaceName, subInterface);
@@ -233,3 +237,6 @@ const handleArray = (
 
 export const printType = (data: object, declarationName: string) =>
   console.log(getInterface(data, declarationName));
+
+
+const withNullCheck = (typ:string) => typ==='null'||typ==='undefined' ?'unknown':typ
