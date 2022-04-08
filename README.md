@@ -56,3 +56,6 @@ Below are the suppored arguments:
 - (optional )`-t` or `-T` or `--target-path` : path to the type-file to be generated
 
 
+
+GitHub: https://github.com/emreSlim/typescript-types-generator
+Issues: https://github.com/emreSlim/typescript-types-generator/issues
