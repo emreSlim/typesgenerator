@@ -1,0 +1,14 @@
+{
+    "name": "john doe",
+    "hobbies": [
+        {
+            "name": "coding",
+            "outdoor": false
+        },
+        {
+            "name": "Cycling",
+            "outdoor": true
+        }
+    ],
+    "age": 35
+}
