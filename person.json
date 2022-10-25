@@ -1,14 +1,15 @@
 {
-    "name": "john doe",
-    "hobbies": [
-        {
-            "name": "coding",
-            "outdoor": false
-        },
-        {
-            "name": "Cycling",
-            "outdoor": true
-        }
-    ],
-    "age": 35
+  "name": "john doe",
+  "hobbies": [
+    {
+      "name": "coding",
+      "outdoor": false
+    },
+    {
+      "name": "Cycling",
+      "outdoor": true
+    }
+  ],
+  "age": 35,
+  "score": [0, "A", ["1st"]]
 }

@@ -1,7 +1,6 @@
 import { isKeyPlain, toTitleCase, withNullCheck } from '../../utils';
 import { getInterface } from '../getInterface';
 
-
 export const handleObject = (
   object: any,
   declarationName: string,
@@ -20,7 +19,11 @@ export const handleObject = (
 
         const subInterfaceName = declarationName + toTitleCase(key);
 
-        if (value==null || typeof value !== 'object' || value instanceof Array) {
+        if (
+          value == null ||
+          typeof value !== 'object' ||
+          value instanceof Array
+        ) {
           const subInterface = getInterface(
             value,
             subInterfaceName,
@@ -46,10 +49,8 @@ export const handleObject = (
         if (!modelString.trim().endsWith(';')) modelString += ';\n';
       }
     } else {
-
       if (!areObjectValuesSameType(object)) {
-
-        for (let [key,value] of Object.entries(object)) {
+        for (let [key, value] of Object.entries(object)) {
           const subInterfaceName = declarationName + toTitleCase(key);
 
           const subInterface = getInterface(
@@ -60,7 +61,11 @@ export const handleObject = (
             '  '
           );
 
-          if (value==null || typeof value !== 'object' || value instanceof Array) {
+          if (
+            value == null ||
+            typeof value !== 'object' ||
+            value instanceof Array
+          ) {
             modelString += `${indentation}  ${key}: ${subInterface};\n`;
           } else {
             subInterfaces.set(subInterfaceName, subInterface);
@@ -69,21 +74,20 @@ export const handleObject = (
         }
       } else {
         //if value objects are of same type
-        const item: {[key:string]:Set<string>} = {};
+        const item: { [key: string]: Set<string> } = {};
 
         for (let value of Object.values(object)) {
-          for (let [k,v] of Object.entries(value) ) {
-
+          for (let [k, v] of Object.entries(value as object)) {
             if (item[k] == null) item[k] = new Set<string>();
-            item[k].add(
-              getInterface(v, declarationName, subInterfaces, false)
-            );
+            item[k].add(getInterface(v, declarationName, subInterfaces, false));
           }
         }
-        
-        modelString += `${indentation}  [${getParenyKeyName(declarationName)}Key: string]: {\n`;
 
-        for (let [key,value] of Object.entries(item)) {
+        modelString += `${indentation}  [${getParenyKeyName(
+          declarationName
+        )}Key: string]: {\n`;
+
+        for (let [key, value] of Object.entries(item)) {
           const valueType = Array.from(value).join(' | ');
 
           modelString += `${indentation + '    '}${key}: ${withNullCheck(
@@ -101,20 +105,19 @@ export const handleObject = (
   return typeString;
 };
 
-
-const getParenyKeyName = (str:string) => {
+const getParenyKeyName = (str: string) => {
   const a = str.match(/[A-Z]/g);
 
- return str
-    .slice(str.lastIndexOf(a[a.length - 1]))
-    .toLowerCase();
-}
+  if (a == null) return str;
 
-const areObjectValuesSameType = (object:any) => {
+  return str.slice(str.lastIndexOf(a[a.length - 1])).toLowerCase();
+};
+
+const areObjectValuesSameType = (object: any) => {
   const values = Object.values(object);
   if (values.length < 3) {
     return false;
-  } else if (values.findIndex((v) => v == null)!=-1) {
+  } else if (values.findIndex((v) => v == null) != -1) {
     return false;
   } else {
     const sampleVal = values.find((v) => v != null);
@@ -137,4 +140,3 @@ const objectHasNullOrArrayValues = (object: any) => {
       typeof value !== 'object' || value instanceof Array || value == null
   );
 };
-

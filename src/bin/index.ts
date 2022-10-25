@@ -43,18 +43,23 @@ try {
       fs.readFile(
         sourcePath,
         'utf-8',
-        (err: NodeJS.ErrnoException, data: string) => {
+        (err: NodeJS.ErrnoException | null, data: string) => {
           if (err) {
             throw err;
           } else {
-            if (!targetPath) targetPath = path.dirname(sourcePath);
-            const inputFileName = path.basename(sourcePath, '.json');
+            let inputFileName = '';
+            if (sourcePath) {
+              if (!targetPath) targetPath = path.dirname(sourcePath);
+              inputFileName = path.basename(sourcePath, '.json');
+            }
             const outFileName = typeName?.toLowerCase() ?? inputFileName;
-            const outputPath: string = path.resolve(
-              targetPath,
-              outFileName + '.ts'
-            );
-            createInterfaceFile(JSON.parse(data), typeName, outputPath);
+            if (targetPath && typeName) {
+              const outputPath: string = path.resolve(
+                targetPath,
+                outFileName + '.ts'
+              );
+              createInterfaceFile(JSON.parse(data), typeName, outputPath);
+            }
           }
         }
       );
@@ -64,7 +69,7 @@ try {
   } else {
     throw new Error('source path to JSON not given');
   }
-} catch (e) {
+} catch (e: any) {
   logError(e.message);
 }
 
@@ -73,7 +78,7 @@ export function createInterfaceFile(
   typeName: string,
   outputPath: string
 ) {
-  const string = getInterface(data, typeName);
+  const string = getInterface(data, typeName).trim();
 
   fs.writeFile(outputPath, string, { encoding: 'utf-8' }, () => {
     console.log('Type file generated successfully:', outputPath);

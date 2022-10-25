@@ -10,16 +10,16 @@ export const handleArray = (
   let typeString = '';
   const item = array[0];
 
-  if (!(item instanceof Array) && item != null && item instanceof Object) { //if elements are object
+  if (!(item instanceof Array) && item != null && item instanceof Object) {
+    //if elements are object
     const subInterfaceName = declarationName.trim().endsWith('s')
       ? declarationName.slice(0, -1)
       : declarationName + 'Item';
 
-    const item: {[key:string]: Set<any>} = {};
+    const item: { [key: string]: Set<any> } = {};
 
-    for (let elem of array) { 
+    for (let elem of array) {
       for (let [k, v] of Object.entries(elem)) {
-
         if (item[k] == null) {
           item[k] = new Set<any>();
         }

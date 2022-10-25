@@ -1,4 +1,10 @@
-import { isKeyPlain, logWarning, toTitleCase, withNullCheck } from '../utils';
+import {
+  isKeyPlain,
+  logWarning,
+  replaceAll,
+  toTitleCase,
+  withNullCheck,
+} from '../utils';
 import { handleArray } from './handlers/handleArray';
 import { handleObject } from './handlers/handleObject';
 
@@ -17,8 +23,6 @@ export const getInterface: InterfaceGenerator = (
   isFirstStack = true,
   indentation = ''
 ) => {
-
-
   if (declarationName == null) {
     declarationName = 'Type';
   } else if (declarationName.length) {
@@ -89,10 +93,13 @@ export const getInterface: InterfaceGenerator = (
         'Type Name was not given. Type generated with dummy name: "Type"'
       );
   }
-  return (subInterfaceString + codeString).replaceAll(/\n+/g,"\n").replaceAll("\nexport","\n\nexport");
+
+  return replaceAll(
+    replaceAll(subInterfaceString + codeString, /\n+/g, '\n'),
+    '\nexport',
+    '\n\nexport'
+  );
 };
 
-
 export const printType = (object: object, declarationName: string) =>
-  console.log(getInterface(object, declarationName));
-
+  console.log(getInterface(object, declarationName).trim());

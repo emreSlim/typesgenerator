@@ -19,9 +19,10 @@ const object = {
   name: 'john doe',
   hobbies: [
     { name: 'coding', outdoor: false },
-    { name: 'Cycling', outdoor: true },
+    { name: 'cycling', outdoor: true },
   ],
   age: 35,
+  score: [0, 'A', ['1st']],
 };
 
 printType(object, 'Person');
@@ -37,6 +38,7 @@ export type Person = {
   name: string;
   hobbies: PersonHobbie[];
   age: number;
+  score: (number | string | string[])[];
 };
 */
 ```
