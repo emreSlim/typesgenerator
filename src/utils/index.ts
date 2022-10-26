@@ -29,3 +29,7 @@ export const replaceAll = (
 ) => {
   return str.split(subStr).join(repStr);
 };
+
+export const getNameFromNonPlainKey = (str: string) => {
+  return str.split(/\W+/).join('');
+};

@@ -1,4 +1,9 @@
-import { toTitleCase, withNullCheck } from '../../utils';
+import {
+  getNameFromNonPlainKey,
+  isKeyPlain,
+  toTitleCase,
+  withNullCheck,
+} from '../../utils';
 import { getInterface } from '../getInterface';
 
 export const handleArray = (
@@ -12,6 +17,7 @@ export const handleArray = (
 
   if (!(item instanceof Array) && item != null && item instanceof Object) {
     //if elements are object
+
     const subInterfaceName = declarationName.trim().endsWith('s')
       ? declarationName.slice(0, -1)
       : declarationName + 'Item';
@@ -24,7 +30,14 @@ export const handleArray = (
           item[k] = new Set<any>();
         }
 
-        const subSubInterfaceName = subInterfaceName + toTitleCase(k);
+        let subSubInterfaceName = subInterfaceName;
+
+        if (!isKeyPlain(k)) {
+          subSubInterfaceName += toTitleCase(getNameFromNonPlainKey(k));
+        } else {
+          subSubInterfaceName += toTitleCase(k);
+        }
+
         const subSubInterface = getInterface(
           v,
           subSubInterfaceName,
@@ -48,6 +61,8 @@ export const handleArray = (
           t.trim().endsWith(';') ? t.trim().slice(0, -1) : t.trim()
         )
         .join(' | ');
+
+      if (!isKeyPlain(key)) key = `"${key}"`;
       subInterface += `  ${key}: ${withNullCheck(valueType)};\n`;
     }
     subInterface += '};\n\n';

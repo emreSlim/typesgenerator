@@ -1,4 +1,9 @@
-import { isKeyPlain, toTitleCase, withNullCheck } from '../../utils';
+import {
+  getNameFromNonPlainKey,
+  isKeyPlain,
+  toTitleCase,
+  withNullCheck,
+} from '../../utils';
 import { getInterface } from '../getInterface';
 
 export const handleObject = (
@@ -15,9 +20,14 @@ export const handleObject = (
 
     if (objectHasNullOrArrayValues(object)) {
       for (let [key, value] of Object.entries(object)) {
-        if (!isKeyPlain(key)) key = `"${key}"`;
+        let subInterfaceName = declarationName;
 
-        const subInterfaceName = declarationName + toTitleCase(key);
+        if (!isKeyPlain(key)) {
+          subInterfaceName += toTitleCase(getNameFromNonPlainKey(key));
+          key = `"${key}"`;
+        } else {
+          subInterfaceName += toTitleCase(key);
+        }
 
         if (
           value == null ||
@@ -51,7 +61,14 @@ export const handleObject = (
     } else {
       if (!areObjectValuesSameType(object)) {
         for (let [key, value] of Object.entries(object)) {
-          const subInterfaceName = declarationName + toTitleCase(key);
+          let subInterfaceName = declarationName;
+
+          if (!isKeyPlain(key)) {
+            subInterfaceName += toTitleCase(getNameFromNonPlainKey(key));
+            key = `"${key}"`;
+          } else {
+            subInterfaceName += toTitleCase(key);
+          }
 
           const subInterface = getInterface(
             value,

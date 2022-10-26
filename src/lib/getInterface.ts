@@ -1,4 +1,5 @@
 import {
+  getNameFromNonPlainKey,
   isKeyPlain,
   logWarning,
   replaceAll,
@@ -85,8 +86,12 @@ export const getInterface: InterfaceGenerator = (
   let subInterfaceString = '';
   if (isFirstStack) {
     subInterfaces.forEach((v, k) => {
-      if (!isKeyPlain(k)) k = `"${k}"`;
-      subInterfaceString += `\nexport type ${k} = ${v}`;
+      let name = k;
+      if (!isKeyPlain(k)) {
+        name = getNameFromNonPlainKey(k);
+      }
+
+      subInterfaceString += `\nexport type ${name} = ${v}`;
     });
     declarationName === 'Type' &&
       logWarning(
