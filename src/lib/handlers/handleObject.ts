@@ -1,6 +1,7 @@
 import {
   getNameFromNonPlainKey,
   isKeyPlain,
+  mergeInterfaces,
   toTitleCase,
   withNullCheck,
 } from '../../utils';
@@ -46,13 +47,19 @@ export const handleObject = (
             subInterface
           )};\n`;
         } else {
-          const subInterface = getInterface(
+          let subInterface = getInterface(
             value,
             subInterfaceName,
             subInterfaces,
             false,
             ''
           );
+          if (subInterfaces.has(subInterfaceName)) {
+            subInterfaceName = mergeInterfaces(
+              subInterfaces.get(subInterfaceName) as string,
+              subInterface
+            );
+          }
           subInterfaces.set(subInterfaceName, subInterface);
           modelString += `${indentation}  ${key}: ${subInterfaceName};\n`;
         }
@@ -70,7 +77,7 @@ export const handleObject = (
             subInterfaceName += toTitleCase(key);
           }
 
-          const subInterface = getInterface(
+          let subInterface = getInterface(
             value,
             subInterfaceName,
             subInterfaces,
@@ -85,6 +92,13 @@ export const handleObject = (
           ) {
             modelString += `${indentation}  ${key}: ${subInterface};\n`;
           } else {
+            if (subInterfaces.has(subInterfaceName)) {
+              subInterface = mergeInterfaces(
+                subInterfaces.get(subInterfaceName) as string,
+                subInterface
+              );
+            }
+
             subInterfaces.set(subInterfaceName, subInterface);
             modelString += `${indentation}  ${key}: ${subInterfaceName};\n`;
           }

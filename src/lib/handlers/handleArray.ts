@@ -1,6 +1,7 @@
 import {
   getNameFromNonPlainKey,
   isKeyPlain,
+  mergeInterfaces,
   toTitleCase,
   withNullCheck,
 } from '../../utils';
@@ -18,7 +19,7 @@ export const handleArray = (
   if (!(item instanceof Array) && item != null && item instanceof Object) {
     //if elements are object
 
-    const subInterfaceName = declarationName.trim().endsWith('s')
+    let subInterfaceName = declarationName.trim().endsWith('s')
       ? declarationName.slice(0, -1)
       : declarationName + 'Item';
 
@@ -38,7 +39,7 @@ export const handleArray = (
           subSubInterfaceName += toTitleCase(k);
         }
 
-        const subSubInterface = getInterface(
+        let subSubInterface = getInterface(
           v,
           subSubInterfaceName,
           subInterfaces,
@@ -48,6 +49,13 @@ export const handleArray = (
           item[k].add(subSubInterface); //fill the datum object with all the possible keys
         } else {
           item[k].add(subSubInterfaceName); //fill the datum object with all the possible keys
+
+          if (subInterfaces.has(subSubInterfaceName)) {
+            subSubInterface = mergeInterfaces(
+              subInterfaces.get(subSubInterfaceName) as string,
+              subSubInterface
+            );
+          }
           subInterfaces.set(subSubInterfaceName, subSubInterface);
         }
       }
@@ -66,6 +74,12 @@ export const handleArray = (
       subInterface += `  ${key}: ${withNullCheck(valueType)};\n`;
     }
     subInterface += '};\n\n';
+    if (subInterfaces.has(subInterfaceName)) {
+      subInterface = mergeInterfaces(
+        subInterfaces.get(subInterfaceName) as string,
+        subInterface
+      );
+    }
     subInterfaces.set(subInterfaceName, subInterface);
     typeString = `${subInterfaceName}[]`;
   } else {

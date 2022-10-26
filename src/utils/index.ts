@@ -33,3 +33,48 @@ export const replaceAll = (
 export const getNameFromNonPlainKey = (str: string) => {
   return str.split(/\W+/).join('');
 };
+
+export const mergeInterfaces = (str1: string, str2: string) => {
+  const mainMap = getMapFromInterfaceString(str1);
+  const map2 = getMapFromInterfaceString(str2);
+
+  map2.forEach((typ, key) => {
+    if (mainMap.has(key)) {
+      let oldTyp = mainMap.get(key) as string;
+      if (oldTyp != typ) {
+        oldTyp += `| ${typ}`;
+      }
+      mainMap.set(key, oldTyp);
+    } else {
+      mainMap.set(key, typ);
+    }
+  });
+  return getInterfaceStringFromMap(mainMap);
+};
+
+const getMapFromInterfaceString = (str: string) => {
+  const map = new Map<string, string>();
+  str = replaceAll(str, /\{|\}/, '');
+
+  str
+    .trim()
+    .split(';')
+    .forEach((line) => {
+      line = line.trim();
+      if (!line) return;
+      const [key, typ] = line.split(':');
+      map.set(key.trim(), typ?.trim());
+    });
+
+  return map;
+};
+
+const getInterfaceStringFromMap = (map: Map<string, string>) => {
+  let str = '{\n';
+  map.forEach((typ, key) => {
+    str += `  ${key}`;
+    str += `: ${typ};\n`;
+  });
+  str += '}\n';
+  return str;
+};
