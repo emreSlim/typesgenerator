@@ -62,7 +62,10 @@ const getMapFromInterfaceString = (str: string) => {
     .forEach((line) => {
       line = line.trim();
       if (!line) return;
-      const [key, typ] = line.split(':');
+      const lastIndex = line.lastIndexOf(':');
+      const key = line.slice(0, lastIndex);
+      const typ = line.slice(lastIndex + 1, line.length);
+
       map.set(key.trim(), typ?.trim());
     });
 
