@@ -1,6 +1,6 @@
 {
   "name": "typesgenerator",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "This package helps to create typescript types/interfaces from object or json",
   "main": "dist/cjs/lib/index.js",
   "types": "dist/cjs/lib/index.d.ts",
@@ -9,14 +9,14 @@
   },
   "type": "commonjs",
   "scripts": {
-    "test": "npm run build &&  node test.js",
     "build": "npm run clean && npm run build:esm && npm run build:cjs",
-    "clean": "rm -r dist || true",
-    "testInstallDev": "npm uninstall -g typesgenerator && npm install -g ./",
-    "testCLI": "tg -s person.json -n person",
     "build:esm": "tsc -p ./tsconfig.esm.json ",
     "build:cjs": "tsc -p ./tsconfig.cjs.json",
-    "prepack": "npm run build"
+    "clean": "rm -r dist || del /s /q dist || true",
+    "prepack": "npm run build",
+    "test": "npm run build &&  node test.js",
+    "test:cli": "tg -s person.json -n person",
+    "test:install": "npm uninstall -g typesgenerator && npm install -g ./"
   },
   "keywords": [
     "create",

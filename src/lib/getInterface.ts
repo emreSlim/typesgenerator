@@ -5,13 +5,13 @@ import {
   replaceAll,
   toTitleCase,
   withNullCheck,
-} from '../utils';
-import { handleArray } from './handlers/handleArray';
-import { handleObject } from './handlers/handleObject';
+} from "../utils";
+import { handleArray } from "./handlers/handleArray";
+import { handleObject } from "./handlers/handleObject";
 
 export type InterfaceGenerator = (
   data: any,
-  declarationName: string,
+  declarationName?: string,
   subInterfaces?: Map<string, string>,
   isFirstStack?: boolean,
   indentation?: string
@@ -22,41 +22,41 @@ export const getInterface: InterfaceGenerator = (
   declarationName,
   subInterfaces = new Map(),
   isFirstStack = true,
-  indentation = ''
+  indentation = ""
 ) => {
   if (declarationName == null) {
-    declarationName = 'Type';
+    declarationName = "Type";
   } else if (declarationName.length) {
     declarationName = toTitleCase(declarationName);
   }
 
-  let codeString = '';
-  const declaration = isFirstStack ? `export type ${declarationName} = ` : '';
+  let codeString = "";
+  const declaration = isFirstStack ? `export type ${declarationName} = ` : "";
   switch (typeof data) {
-    case 'boolean':
-      codeString = declaration + 'boolean';
+    case "boolean":
+      codeString = declaration + "boolean";
       break;
-    case 'number':
-      codeString = declaration + 'number';
+    case "number":
+      codeString = declaration + "number";
       break;
-    case 'string':
-      codeString = declaration + 'string';
+    case "string":
+      codeString = declaration + "string";
       break;
-    case 'undefined':
-      codeString = declaration + 'undefined';
+    case "undefined":
+      codeString = declaration + "undefined";
       break;
-    case 'function':
+    case "function":
       {
-        const args: string[] = data.toString().split(/\(|\)/)[1].split(',');
+        const args: string[] = data.toString().split(/\(|\)/)[1].split(",");
         codeString =
           declaration +
           `(${args
-            .map((arg) => (arg ? arg + ': any' : ''))
+            .map((arg) => (arg ? arg + ": any" : ""))
             .join()}) => unknown;\n\n`;
       }
       break;
-    case 'object':
-      if (data == null) codeString = declaration + 'null';
+    case "object":
+      if (data == null) codeString = declaration + "null";
       else if (data instanceof Array) {
         codeString += handleArray(
           data,
@@ -64,7 +64,7 @@ export const getInterface: InterfaceGenerator = (
           subInterfaces,
           declaration
         );
-      } else if (data.constructor.name === 'Object') {
+      } else if (data.constructor.name === "Object") {
         codeString += handleObject(
           data,
           declarationName,
@@ -76,14 +76,14 @@ export const getInterface: InterfaceGenerator = (
         codeString =
           declaration +
           data.constructor.name +
-          '  //add the argument(s) if type is Generic';
+          "  //add the argument(s) if type is Generic";
       }
       break;
     default:
-      codeString = declaration + 'unknown';
+      codeString = declaration + "unknown";
   }
 
-  let subInterfaceString = '';
+  let subInterfaceString = "";
   if (isFirstStack) {
     subInterfaces.forEach((v, k) => {
       let name = k;
@@ -93,16 +93,16 @@ export const getInterface: InterfaceGenerator = (
 
       subInterfaceString += `\nexport type ${name} = ${v}`;
     });
-    declarationName === 'Type' &&
+    declarationName === "Type" &&
       logWarning(
         'Type Name was not given. Type generated with dummy name: "Type"'
       );
   }
 
   return replaceAll(
-    replaceAll(subInterfaceString + codeString, /\n+/g, '\n'),
-    '\nexport',
-    '\n\nexport'
+    replaceAll(subInterfaceString + codeString, /\n+/g, "\n"),
+    "\nexport",
+    "\n\nexport"
   );
 };
 

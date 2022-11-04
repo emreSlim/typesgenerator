@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-import * as fs from 'fs';
-import { isArgumentAKey, logError } from '../utils';
-import * as path from 'path';
-import { getInterface } from '../lib/getInterface';
+import * as fs from "fs";
+import { isArgumentAKey, logError } from "../utils";
+import * as path from "path";
+import { getInterface } from "../lib/getInterface";
 
 const args: string[] = process.argv.slice(2);
 
@@ -18,16 +18,16 @@ for (let i = 0; i < args.length; i++) {
   if (isArgumentAKey(arg) && !isArgumentAKey(nextArg)) {
     arg = arg.toLowerCase();
     switch (arg) {
-      case '-s':
-      case '--source-path':
+      case "-s":
+      case "--source-path":
         sourcePath = nextArg;
         break;
-      case '-t':
-      case '--target-path':
+      case "-t":
+      case "--target-path":
         targetPath = nextArg;
         break;
-      case '-n':
-      case '--type-name':
+      case "-n":
+      case "--type-name":
         typeName = nextArg;
         break;
     }
@@ -42,21 +42,22 @@ try {
     if (fs.existsSync(sourcePath)) {
       fs.readFile(
         sourcePath,
-        'utf-8',
+        "utf-8",
         (err: NodeJS.ErrnoException | null, data: string) => {
           if (err) {
             throw err;
           } else {
-            let inputFileName = '';
+            let inputFileName = "";
             if (sourcePath) {
               if (!targetPath) targetPath = path.dirname(sourcePath);
-              inputFileName = path.basename(sourcePath, '.json');
+              inputFileName = path.basename(sourcePath, ".json");
             }
             const outFileName = typeName?.toLowerCase() ?? inputFileName;
-            if (targetPath && typeName) {
+
+            if (targetPath) {
               const outputPath: string = path.resolve(
                 targetPath,
-                outFileName + '.ts'
+                outFileName + ".ts"
               );
               createInterfaceFile(JSON.parse(data), typeName, outputPath);
             }
@@ -67,7 +68,9 @@ try {
       throw new Error("given source path doesn't exist");
     }
   } else {
-    throw new Error('source path to JSON not given');
+    throw new Error(
+      "source path to JSON not given. Please use -s ----source-path followed by json source path"
+    );
   }
 } catch (e: any) {
   logError(e.message);
@@ -75,12 +78,12 @@ try {
 
 export function createInterfaceFile(
   data: any,
-  typeName: string,
+  typeName: string | undefined,
   outputPath: string
 ) {
   const string = getInterface(data, typeName).trim();
 
-  fs.writeFile(outputPath, string, { encoding: 'utf-8' }, () => {
-    console.log('Type file generated successfully:', outputPath);
+  fs.writeFile(outputPath, string, { encoding: "utf-8" }, () => {
+    console.log("Type file generated successfully:", outputPath);
   });
 }
