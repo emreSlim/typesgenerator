@@ -16,7 +16,9 @@
     "prepack": "npm run build",
     "test": "npm run build &&  node test.js",
     "test:cli": "tg -s person.json -n person",
-    "test:install": "npm uninstall -g typesgenerator && npm install -g ./"
+    "test:install": "npm uninstall -g typesgenerator && npm install -g ./",
+    "deploy": "node deploy.js"
+    
   },
   "keywords": [
     "create",
